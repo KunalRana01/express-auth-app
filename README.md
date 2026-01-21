@@ -1,8 +1,3 @@
-Below is **plain, clean, copy-pasteable Markdown text**.
-Just copy **everything** and paste it directly into `README.md`.
-
----
-
 ```md
 # Express Authentication App (Practice Project)
 
@@ -39,7 +34,6 @@ The purpose of this project is to understand user authentication flow and backen
 ## Project Structure
 
 ```
-
 .
 ├── models
 │   ├── user.js
