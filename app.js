@@ -48,7 +48,7 @@ app.post("/create" , async (req,res)=>{
         console.log(hash);
         
     });
-
+ 
     //Generate token using jwt
     let token = jwt.sign({email:email , userid : user._id} , "secretkeyiknowthisisstupid")
     res.cookie("token" , token)
@@ -71,11 +71,32 @@ app.post("/login" , async (req,res)=>{
         if(result){
             let token = jwt.sign({email:email , userId : user._id} , "secretkeyiknowthisisstupid")
             res.cookie("token" , token)
-            return res.status(200).send("Login Successfull...")
+            return res.status(200).redirect("/profile")
         } 
         else res.redirect("/login")
 
     });
+})
+
+app.post("/createpost" , isLoggedIn , async (req,res)=>{
+    let user = await userModel.findOne({email:req.user.email})
+
+    let {postcontent} = req.body
+    
+    
+
+    let post = await postModel.create({
+        user:user._id,
+        content:postcontent
+    })
+
+    user.posts.push(post._id)
+    await user.save()
+
+    res.redirect("/profile")
+
+
+
 })
 
 
@@ -85,19 +106,21 @@ app.get("/logout" , (req,res)=>{
 })
 
 
-app.get("/profile" , isLoggedIn ,(req,res)=>{
-    console.log(req.user);
+app.get("/profile" ,  isLoggedIn, async (req,res)=>{
     
-    res.render("login")
+    let user = await userModel.findOne({email:req.user.email}).populate("posts")
+    res.render("profile" , {user})
 })
 
 function isLoggedIn(req,res,next){
-    if(req.cookies.token==="") res.send("You must be logged in....")
+    
+    if(req.cookies.token===undefined || req.cookies.token ==="") res.redirect("/login")
     else{
         let data = jwt.verify(req.cookies.token , "secretkeyiknowthisisstupid" )
         req.user = data
+        next()
     }
-    next()
+    
 }
 
 app.listen(3000)
