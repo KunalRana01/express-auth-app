@@ -31,9 +31,11 @@
                     <div class="post w-1/4 border-2 border-zinc-800 p-3 rounded-md bg-zinc-800">
                     <h4 class="text-green-400 mb-2"><%= user.username %></h4>
                     <p class="text-sm tracking-tight"><%= post.content %></p>
-                    <div class="btns flex mt-2 gap-2">
-                        <a href="" class="px-1 py-1 text-blue-300 text-sm">Like</a>
-                        <a href="" class="px-1 py-1 text-zinc-300 text-sm">Edit</a>
+                    <small class="mt-2 inline-block"><%= post.likes.length %></small>
+                    <div class="btns flex mt-1 gap-2">
+                        <a href="/like/<%= post._id %>" class="px-1 py-1 text-blue-300 text-sm"><%= post.likes.indexOf(user._id) ===-1 ? "Like":"Unlike" %>
+                        </a>
+                        <a href="/edit/<%= post._id %>" class="px-1 py-1 text-zinc-300 text-sm">Edit</a>
                     </div>
                 </div>
                 <%})%>
